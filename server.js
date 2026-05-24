@@ -9,27 +9,27 @@ const PORT = process.env.PORT || 3000;
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 app.get("/", (req, res) => {
-  res.send("Hermes/OpenClaw bridge is running.");
+  res.send("Hermes/OpenClaw Groq bridge is running.");
 });
 
 app.post("/telegram", async (req, res) => {
   try {
     const message = req.body.message?.text || "";
-    const chatId = req.body.message?.chat?.id;
+    const chatId = req.body.message?.chat?.id || TELEGRAM_CHAT_ID;
 
     if (!message) return res.sendStatus(200);
 
     const aiResponse = await axios.post(
-      "https://openrouter.ai/api/v1/chat/completions",
+      "https://api.groq.com/openai/v1/chat/completions",
       {
-        model: "mistralai/mistral-7b-instruct:free",
+        model: "llama-3.1-8b-instant",
         messages: [
           {
             role: "system",
-            content: "You are Hermes/OpenClaw command assistant. Help Chris manage AI agents, social media workflows, and automation."
+            content: "You are Hermes/OpenClaw command assistant for Chris. Help manage AI agents, social media workflows, automation, content planning, monetization, and technical setup. Be direct and action-focused."
           },
           {
             role: "user",
@@ -45,10 +45,10 @@ app.post("/telegram", async (req, res) => {
       }
     );
 
-    const reply = aiResponse.data.choices?.[0]?.message?.content || "No response.";
+    const reply = aiResponse.data.choices?.[0]?.message?.content || "No response from Groq.";
 
     await axios.post(https://api.telegram.org/bot/sendMessage, {
-      chat_id: chatId || TELEGRAM_CHAT_ID,
+      chat_id: chatId,
       text: reply
     });
 
@@ -60,5 +60,5 @@ app.post("/telegram", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(Bridge running on port );
+  console.log(Hermes/OpenClaw Groq bridge running on port );
 });
