@@ -39,7 +39,7 @@ app.post("/telegram", async (req, res) => {
       },
       {
         headers: {
-          Authorization: Bearer ,
+          Authorization: `Bearer ${GROQ_API_KEY}`,
           "Content-Type": "application/json"
         }
       }
@@ -47,7 +47,7 @@ app.post("/telegram", async (req, res) => {
 
     const reply = aiResponse.data.choices?.[0]?.message?.content || "No response from Groq.";
 
-    await axios.post(https://api.telegram.org/bot/sendMessage, {
+    await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       chat_id: chatId,
       text: reply
     });
@@ -60,5 +60,5 @@ app.post("/telegram", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(Hermes/OpenClaw Groq bridge running on port );
+  console.log(`Hermes/OpenClaw Groq bridge running on port ${PORT}`);
 });
